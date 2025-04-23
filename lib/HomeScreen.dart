@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:snack_bar_app/GaleriaScreen.dart';
 import 'package:snack_bar_app/PresentationDrinksBarScreen.dart';
 import 'dart:html' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:snack_bar_app/PresentationSnackBarScreen.dart';
 
@@ -129,17 +130,27 @@ class _HomescreenState extends State<Homescreen> {
             Paquetessnackbarscreen(),
             Text("Nuestra galeria", style: GoogleFonts.atma(color: Colors.blueGrey, fontWeight: FontWeight.w600, fontSize: 50),),
             Galeriascreen()
-
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print("Botón flotante presionado");
-        },
+        onPressed: _launchWhatsApp,
         child: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white,),
         backgroundColor: Colors.green,
       ),
     );
+  }
+
+  final String phone = '+526442366993'; // número en formato internacional
+  final String message = 'Hola, quiero más información';
+
+  void _launchWhatsApp() async {
+    final url = 'https://wa.me/${phone.replaceAll('+', '')}?text=${Uri.encodeComponent(message)}';
+
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'No se pudo abrir WhatsApp';
+    }
   }
 }
